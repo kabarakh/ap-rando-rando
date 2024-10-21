@@ -1,0 +1,272 @@
+﻿# Q. What is this file?
+# A. This file contains options which allow you to configure your multiworld experience while allowing
+#    others to play how they want as well.
+#
+# Q. How do I use it?
+# A. The options in this file are weighted. This means the higher number you assign to a value, the
+#    more chances you have for that option to be chosen. For example, an option like this:
+#
+#    map_shuffle:
+#      on: 5
+#      off: 15
+#
+#    Means you have 5 chances for map shuffle to occur, and 15 chances for map shuffle to be turned
+#    off.
+#
+# Q. I've never seen a file like this before. What characters am I allowed to use?
+# A. This is a .yaml file. You are allowed to use most characters.
+#    To test if your yaml is valid or not, you can use this website:
+#        http://www.yamllint.com/
+#    You can also verify that your Archipelago options are valid at this site:
+#        https://archipelago.gg/check
+
+# Your name in-game, limited to 16 characters.
+#     {player} will be replaced with the player's slot number.
+#     {PLAYER} will be replaced with the player's slot number, if that slot number is greater than 1.
+#     {number} will be replaced with the counter value of the name.
+#     {NUMBER} will be replaced with the counter value of the name, if the counter value is greater than 1.
+name: Player{number}
+
+# Used to describe your yaml. Useful if you have multiple files.
+description: Default A Link Between Worlds Template
+
+game: A Link Between Worlds
+requires:
+  version: 0.5.0 # Version of Archipelago required for this yaml to work as expected.
+
+A Link Between Worlds:
+  # Game Options
+  progression_balancing:
+    # A system that can move progression earlier, to try and prevent the player from getting stuck and bored early.
+    # 
+    # A lower setting means more getting stuck. A higher setting means less getting stuck.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 99
+    random: 0
+    random-low: 0
+    random-high: 0
+    disabled: 0 # equivalent to 0
+    normal: 50 # equivalent to 50
+    extreme: 0 # equivalent to 99
+
+  accessibility:
+    # Set rules for reachability of your items/locations.
+    # 
+    # - **Locations:** ensure everything can be reached and acquired.
+    # - **Items:** ensure all logically relevant items can be acquired.
+    # - **Minimal:** ensure what is needed to reach your goal can be acquired.
+    locations: 0
+    items: 50
+    minimal: 0
+
+  logic_mode:
+    # Logic to use for item placement.
+    # normal: Standard gameplay, no tricky item use or glitches. If unsure, choose this.
+    # hard: Adds tricks that aren't technically glitches. Lamp + Net considered as weapons. No glitches.
+    # glitched: Includes the above plus a selection of easy-to-learn glitches.
+    # adv_glitched: Includes the above plus "advanced" glitches that may be a challenge to master.
+    # hell: Includes every known RTA-viable glitch. Don't choose this.
+    normal: 50
+    hard: 0
+    glitched: 0
+    adv_glitched: 0
+    hell: 0
+
+  randomize_dungeon_prizes:
+    # This shuffles all Sage Portraits and Pendants among themselves.
+    'false': 50
+    'true': 0
+
+  lorule_castle_requirement:
+    # Choose how many Portraits are needed to enter Lorule Castle and fight Yuganon.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 7
+    7: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  pedestal_requirement:
+    # Choose which Pendants are required to reach the Master Sword Pedestal.
+    # vanilla: Only the Pendants of Power and Wisdom are required.
+    # standard: All Pendants are required.
+    vanilla: 0
+    standard: 50
+
+  nice_items:
+    # Choose how to handle Nice Items.
+    # vanilla: Nice Items are obtained as upgrades from Mother Maiamai.
+    # shuffled: Freely shuffles two progressive copies of each Ravio Item.
+    # off: Removes Nice Items from the game.
+    vanilla: 50
+    shuffled: 0
+    'off': 0
+
+  super_items:
+    # This shuffles a second progressive copy of the Lamp and Net into the general item pool.
+    'false': 50
+    'true': 0
+
+  lamp_and_net_as_weapons:
+    # Treat the base Lamp and Net as damage-dealing weapons?
+    # - The red base Lamp and Net each deal 1/2 the damage of the Forgotten Sword (i.e. they're VERY BAD weapons).
+    # - The blue Super Lamp and Super Net each deal 4 damage (same as MS Lv3) and are always considered weapons, regardless of this setting.
+    'false': 50
+    'true': 0
+
+  no_progression_enemies:
+    # Removes Enemies from dungeons that are themselves Progression (e.g.: Bawbs, the bomb enemy).
+    # Logic will be adjusted to require the player's items instead.
+    'false': 50
+    'true': 0
+
+  assured_weapon:
+    # "If enabled at least one weapon is guaranteed to be placed in Ravio's Shop.
+    'false': 50
+    'true': 0
+
+  maiamai_mayhem:
+    # This shuffles Maiamai into the pool, adding 100 more locations.
+    'false': 50
+    'true': 0
+
+  initial_crack_state:
+    # Choose the initial Crack state:
+    # closed: All Cracks except the Hyrule Castle Crack (and its pair) remain closed until the Quake Item is found.
+    # open: All Cracks are open from the start of the game, and the Quake Item is not in the item pool.
+    closed: 0
+    open: 50
+
+  crack_shuffle:
+    # Choose how to shuffle Cracks (NOT YET IMPLEMENTED):
+    # off: Cracks are not shuffled.
+    # cross_world_pairs: Cracks are shuffled, but remain in Hyrule/Lorule pairs.
+    # any_world_pairs: Cracks are shuffled freely, and can lead to the same or opposite world.
+    # mirrored_cross_world_pairs: Same as Cross World Pairs, but each pair's vanilla counterparts will be in a matching pair.
+    # mirrored_any_world_pairs: Same as Any World Pairs, but each pair's vanilla counterparts will be in a matching pair.
+    'off': 50
+    cross_world_pairs: 0
+    any_world_pairs: 0
+    mirrored_cross_world_pairs: 0
+    mirrored_any_world_pairs: 0
+
+  minigames_excluded:
+    # Excludes the following: Octoball Derby, Dodge the Cuccos, Hyrule Hotfoot, Treacherous Tower, and both Rupee Rushes.
+    'false': 50
+    'true': 0
+
+  skip_big_bomb_flower:
+    # Skips the Big Bomb Flower by removing the 5 Big Rocks in Lorule Field.
+    # (Does not affect Lorule Castle Bomb Trial)
+    'false': 50
+    'true': 0
+
+  trials_required:
+    # Choose the number of (randomly selected) trials required to open the Lorule Castle Trials Door.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 4
+    4: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  open_trials_door:
+    # Makes the Lorule Castle Trials Door automatically open from both sides.
+    # This may require entering Lorule Castle early via the crack.
+    # If turned on, this overrides the Trials Required setting.
+    'false': 50
+    'true': 0
+
+  bow_of_light_in_castle:
+    # Limits the Bow of Light's placement to somewhere in Lorule Castle (including possibly Zelda).
+    'false': 50
+    'true': 0
+
+  weather_vanes:
+    # Choose Weather Vanes behavior. Logic may require using them to progress.
+    # standard: Start with only the standard complimentary Weather Vanes (Link's House & Vacant House)
+    # shuffled: Weather Vane destinations are shuffled into random pairs
+    # convenient: Start with convenient Weather Vanes that don't affect logic
+    # hyrule: Start with the 9 Hyrule Weather Vanes (and Vacant House)
+    # lorule: Start with the 13 Lorule Weather Vanes (and Link's House)
+    # all: Start with all 22 Weather Vanes
+    standard: 50
+    shuffled: 0
+    convenient: 0
+    hyrule: 0
+    lorule: 0
+    all: 0
+
+  dark_rooms_lampless:
+    # If enabled the logic may expect players to cross Dark Rooms without the Lamp.
+    # Not for beginners and those who like being able to see things.
+    'false': 50
+    'true': 0
+
+  swordless_mode:
+    # Removes *ALL* Swords from the game.
+    # The Bug Net becomes a required item to play Dead Man's Volley against Yuga Ganon.
+    'false': 50
+    'true': 0
+
+  treacherous_tower_floors:
+    # Choose how many floors the Treacherous Tower should have (2-66).
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 2
+    # Maximum value is 66
+    5: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  purple_potion_bottles:
+    # Fills all Empty Bottles with a free Purple Potion.
+    'false': 50
+    'true': 0
+
+  keysy:
+    # This setting removes keys and locked doors from dungeons if enabled.
+    'off': 50
+    small: 0
+    big: 0
+    all: 0
+
+  # Item & Location Options
+  local_items:
+    # Forces these items to be in their native world.
+    []
+
+  non_local_items:
+    # Forces these items to be outside their native world.
+    []
+
+  start_inventory:
+    # Start with these items.
+    {}
+
+  start_hints:
+    # Start with these item's locations prefilled into the ``!hint`` command.
+    []
+
+  start_location_hints:
+    # Start with these locations and their item prefilled into the ``!hint`` command.
+    []
+
+  exclude_locations:
+    # Prevent these locations from having an important item.
+    []
+
+  priority_locations:
+    # Prevent these locations from having an unimportant item.
+    []
+
+  item_links:
+    # Share part of your item pool with other players.
+    []
