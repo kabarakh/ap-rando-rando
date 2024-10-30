@@ -19,29 +19,77 @@ const saveTemplatesFromFiles = () => {
   });
 
   fileTemplates.forEach((template) => {
-    templatesRepo.save({content: template})
+    const game = template.game;
+    templatesRepo.save({options: template[game], game})
   })
 }
-
 const numberOfWorlds = ref(4);
 const chosenWorlds = ref([]);
+
+const states = {
+  prod: 1,
+  alpha: 0.5,
+  beta: 0.75
+}
+
+const gameConfigs = {
+  'A Link Between Worlds': {
+    names: [
+      'KabaBetweenWorlds',
+      'KabaALBW',
+      'KabarakhALBW',
+      'KabaZelda3DS'
+    ],
+    state: 'alpha',
+    weight: 5,
+  },
+  'Links Awakening DX': {
+    names: [
+      'KabaLADXRakh',
+      'KabarakhDX',
+      'KabarakhAwakening'
+    ],
+    state: 'beta',
+    weight: 10
+  },
+  'Chrono Trigger Jets of Time': {
+    names: [
+      'KabaOfTime',
+      'KabarakhCT',
+      'KabarakhJoT'
+    ],
+    state: 'beta',
+    weight: 2
+  },
+  'A Link to the Past': {
+    names: [],
+    state: 'prod',
+    weight: 1
+  }
+}
 
 const templates = templatesRepo.all();
 
 const chooseWorlds = () => {
-  const newTemplates = [];
-  const randomCount = random(200, 300);
-  const newArray = Array(randomCount).fill(templates[0]);
-  const randomCount2 = random(10, 30);
-  const newArray2 = Array(randomCount2).fill(templates[1]);
-   const concatArray = newTemplates.concat(templates, newArray, newArray2)
-  console.log(concatArray)
-  const newShuffled = shuffle(concatArray)
-    const uniqShuffled = uniq(newShuffled)
-console.log(newShuffled, uniqShuffled, uniqShuffled.slice(0, numberOfWorlds.value))
+  const baseFactor = 1000;
+  let weightedTemplates = [];
+  templates.forEach(template => {
+    if (gameConfigs[template.game]) {
+      let factor = baseFactor
+      factor *= gameConfigs[template.game].weight;
+      factor *= states[gameConfigs[template.game].state]
 
-    const shuffled = shuffle(templates);
-    chosenWorlds.value = shuffled.slice(0, numberOfWorlds.value);
+      const newArray = Array(factor).fill(template);
+      weightedTemplates = weightedTemplates.concat(newArray);
+    } else {
+      const newArray = Array(baseFactor).fill(template);
+      weightedTemplates = weightedTemplates.concat(newArray);
+    }
+  })
+
+  const newShuffled = shuffle(weightedTemplates)
+  const uniqShuffled = uniq(newShuffled)
+  chosenWorlds.value = uniqShuffled.slice(0, numberOfWorlds.value);
 };
 </script>
 
@@ -60,7 +108,7 @@ console.log(newShuffled, uniqShuffled, uniqShuffled.slice(0, numberOfWorlds.valu
     </form>
     <ul>
         <li v-for="(template, index) in chosenWorlds" :key="index">
-            {{ template.content.game }}
+            {{ template.game }}
         </li>
     </ul>
 </template>
