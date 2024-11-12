@@ -1,22 +1,14 @@
-import { Model } from 'pinia-orm'
+type Option = Record<string, number | string> | string[] | string;
 
-type Option = Record<string, number|string>|string[]|string;
+export interface Template {
+    id: number;
+    game: string;
+    options: { [key: string]: Option };
+}
 
-export default class Template extends Model {
-  static entity = 'templates'
-
-  static fields() {
-    return {
-      id: this.uid(),
-      options: this.attr({}),
-      game: this.string(''),
-    }
-  }
-  declare id: string;
-  declare game: string;
-  declare options: {[key: string]: Option}
-
-  static piniaOptions = {
-    persist: true
-  }
+export interface GameConfig {
+  id: number;
+  game: string;
+  weight: number;
+  state: 'alpha'|'beta'|'stable'
 }
