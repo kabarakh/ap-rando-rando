@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { filter, find, map, merge, shuffle, uniq } from 'lodash';
 import { parse } from 'yaml';
-import { computed, ref, watch } from 'vue';
+import { computed, type Ref, ref, watch } from 'vue';
 import database from '@/stores/templates';
 import { useObservable } from '@vueuse/rxjs';
 import { liveQuery } from 'dexie';
@@ -122,6 +122,8 @@ const availableTemplateCount = computed(() => {
   return filtered.length;
 });
 
+const guaranteedGames: Ref<string[]> = ref([])
+
 const states = {
   stable: 1,
   alpha: 0.3,
@@ -144,9 +146,11 @@ const changesByDiscord = {
 
 const chosenDiscord = ref('FFR');
 
+const defaultTemplates = useObservable(liveQuery(database.getAllGameConfigs));
+
 const gameConfigs = computedAsync(async () => {
   const localChosenDiscord = chosenDiscord.value;
-  const gameConfigs = await database.getAllGameConfigs()
+  const gameConfigs = defaultTemplates.value;
   return map(gameConfigs, (gameConfig) => {
     return merge({}, gameConfig, changesByDiscord[localChosenDiscord][gameConfig.game])
   });
@@ -160,6 +164,15 @@ watch(
   },
   { deep: true }
 );
+
+watch(
+  [guaranteedGames],
+  () => {
+    if (guaranteedGames.value.length > numberOfWorlds.value) {
+      numberOfWorlds.value = guaranteedGames.value.length
+    }
+  }
+)
 
 const chooseWorlds = () => {
   const baseFactor = 1000;
@@ -185,9 +198,17 @@ const chooseWorlds = () => {
   });
 
   const newShuffled = shuffle(weightedTemplates);
-  const uniqShuffled = uniq(newShuffled);
+  const guaranteedTemplates = filter(templates.value, (template) => {
+    return guaranteedGames.value.includes(template.game)
+  });
+  const withGuaranteed = guaranteedTemplates.concat(newShuffled);
+  const uniqShuffled = uniq(withGuaranteed);
   chosenWorlds.value = uniqShuffled.slice(0, numberOfWorlds.value);
 };
+
+const resetGuaranteed = () => {
+  guaranteedGames.value = [];
+}
 </script>
 
 <template>
@@ -225,16 +246,27 @@ const chooseWorlds = () => {
         </fieldset>
         <fieldset>
             <label>
-                Number of worlds (1 to {{ availableTemplateCount }})
+                Number of worlds ({{ guaranteedGames.length || 1 }} to {{ availableTemplateCount }})
                 <input
                     type="number"
-                    min="1"
+                    :min="guaranteedGames.length || 1"
                     :max="availableTemplateCount"
                     step="1"
                     v-model="numberOfWorlds"
                 />
             </label>
         </fieldset>
+      <fieldset>
+        <label>
+          Guaranteed games (overwrites stability!)<br/>
+          <select v-model="guaranteedGames" multiple :style="{
+            resize: 'vertical'
+          }">
+            <option :key="template.game" v-for="template in templates" :value="template.game">{{template.game}}</option>
+          </select>
+          <button @click.prevent="resetGuaranteed">Reset guaranteed games</button>
+        </label>
+      </fieldset>
 
         <button :disabled="availableTemplateCount === 0" type="submit">
             Choose random worlds
